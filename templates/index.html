@@ -3,33 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logistic Regression Experiment</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <title>Image Search</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Logistic Regression Cluster Shift Experiment</h1>
-    <form id="experiment-form">
-        <div class="input-group">
-            <label for="start">Shift Start:</label>
-            <input type="number" step="0.01" id="start" name="start" required>
-        </div>
-        <div class="input-group">
-            <label for="end">Shift End:</label>
-            <input type="number" step="0.01" id="end" name="end" required>
-        </div>
-        <div class="input-group">
-            <label for="step_num">Number of Steps:</label>
-            <input type="number" step="1" id="step_num" name="step_num" required>
-        </div>
-        <button type="submit">Run Experiment</button>
-    </form>
+    <div class="container">
+        <h1>Image Search</h1>
+        <form id="image-search-form">
+            <label for="image-query">Image Query:</label>
+            <input type="file" id="image-query" name="image-query" accept="image/*">
 
-    <div id="results" style="display: none;">
-        <h2>Results</h2>
-        <img id="dataset-img" src="" alt="Dataset Plot" style="display: none;">
-        <img id="parameters-img" src="" alt="Parameters vs Shift Distance" style="display: none;">
+            <label for="text-query">Text Query:</label>
+            <input type="text" id="text-query" name="text-query" placeholder="Enter text query">
+
+            <label for="query-weight">Hybrid Query Weight:</label>
+            <input type="number" id="query-weight" name="query-weight" min="0.0" max="1.0" step="0.1" value="0.5">
+
+            <label for="query-type">Select Query Type:</label>
+            <select id="query-type" name="query-type">
+                <option value="image">Image query</option>
+                <option value="text">Text query</option>
+                <option value="hybrid">Hybrid query</option>
+            </select>
+
+            <button type="button" onclick="performSearch()">Search</button>
+        </form>
+
+        <div class="results" id="results">
+            <!-- Results will be displayed here -->
+        </div>
     </div>
-
-    <script src="/static/script.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

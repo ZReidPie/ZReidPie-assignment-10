@@ -1,37 +1,37 @@
-from flask import Flask, render_template, request, jsonify, send_from_directory
+from flask import Flask, render_template, request, jsonify
 import os
-from logistic_regression import do_experiments
+from logistic_regression import search_images
 
 app = Flask(__name__)
 
-# Define the main route
-@app.route('/')
+# Ensure results directory exists
+os.makedirs("uploads", exist_ok=True)
+
+# Route for the main page
+@app.route("/")
 def index():
-    return render_template('index.html')
+    return render_template("index.html")
 
-# Route to handle experiment parameters and trigger the experiment
-@app.route('/run_experiment', methods=['POST'])
-def run_experiment():
-    start = float(request.json['start'])
-    end = float(request.json['end'])
-    step_num = int(request.json['step_num'])
+# Route to handle search queries
+@app.route("/search", methods=["POST"])
+def search():
+    # Retrieve text and image queries
+    text_query = request.form.get("text-query", "")
+    query_type = request.form.get("query-type")
+    weight = float(request.form.get("query-weight", 0.5))
 
-    # Run the experiment with the provided parameters
-    do_experiments(start, end, step_num)
+    image_file = request.files.get("image-query")
+    image_path = None
 
-    # Check if result images are generated and return their paths
-    dataset_img = "results/dataset.png"
-    parameters_img = "results/parameters_vs_shift_distance.png"
-    
-    return jsonify({
-        "dataset_img": dataset_img if os.path.exists(dataset_img) else None,
-        "parameters_img": parameters_img if os.path.exists(parameters_img) else None
-    })
+    if image_file:
+        image_path = os.path.join("uploads", image_file.filename)
+        image_file.save(image_path)
 
-# Route to serve result images
-@app.route('/results/<filename>')
-def results(filename):
-    return send_from_directory('results', filename)
+    # Perform search
+    results = search_images(text_query, image_path, query_type, weight)
 
-if __name__ == '__main__':
+    # Return JSON response
+    return jsonify(results)
+
+if __name__ == "__main__":
     app.run(debug=True)

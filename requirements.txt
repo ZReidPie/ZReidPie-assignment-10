@@ -1,5 +1,11 @@
 flask
-numpy
-scikit-learn
 scipy
+scikit-learn
 matplotlib
+torch
+torchvision
+open-clip-torch
+pillow
+numpy
+pandas
+ipython

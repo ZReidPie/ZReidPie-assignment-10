@@ -1,59 +1,41 @@
-document.getElementById("experiment-form").addEventListener("submit", function(event) {
-    event.preventDefault();  // Prevent form submission
+function performSearch() {
+    const resultsDiv = document.getElementById("results");
 
-    const start = parseFloat(document.getElementById("start").value);
-    const end = parseFloat(document.getElementById("end").value);
-    const stepNum = parseInt(document.getElementById("step_num").value);
+    // Get form data
+    const formData = new FormData();
+    const imageFile = document.getElementById("image-query").files[0];
+    const textQuery = document.getElementById("text-query").value;
+    const queryWeight = document.getElementById("query-weight").value;
+    const queryType = document.getElementById("query-type").value;
 
-    // Validation checks
-    if (isNaN(start)) {
-        alert("Please enter a valid number for Shift Start.");
-        return;
-    }
+    if (imageFile) formData.append("image-query", imageFile);
+    formData.append("text-query", textQuery);
+    formData.append("query-weight", queryWeight);
+    formData.append("query-type", queryType);
 
-    if (isNaN(end)) {
-        alert("Please enter a valid number for Shift End.");
-        return;
-    }
+    // Clear existing results and show loading
+    resultsDiv.innerHTML = "<p>Searching... (This is where the results will appear)</p>";
 
-    if (isNaN(stepNum) || stepNum <= 0) {
-        alert("Please enter a positive integer for Number of Steps.");
-        return;
-    }
-
-    if (start >= end) {
-        alert("Shift Start should be smaller than Shift End.");
-        return;
-    }
-
-    // If all validations pass, submit the form
-    fetch("/run_experiment", {
+    // Send request to Flask backend
+    fetch("/search", {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ start: start, end: end, step_num: stepNum })
+        body: formData,
     })
-    .then(response => response.json())
-    .then(data => {
-        // Show and set images if they exist
-        const resultsDiv = document.getElementById("results");
-        resultsDiv.style.display = "block";
-
-        const datasetImg = document.getElementById("dataset-img");
-        if (data.dataset_img) {
-            datasetImg.src = `/${data.dataset_img}`;
-            datasetImg.style.display = "block";
-        }
-
-        const parametersImg = document.getElementById("parameters-img");
-        if (data.parameters_img) {
-            parametersImg.src = `/${data.parameters_img}`;
-            parametersImg.style.display = "block";
-        }
-    })
-    .catch(error => {
-        console.error("Error running experiment:", error);
-        alert("An error occurred while running the experiment.");
-    });
-});
+        .then((response) => response.json())
+        .then((results) => {
+            // Clear and display results
+            resultsDiv.innerHTML = `<h3>Search Results:</h3>`;
+            results.forEach((result) => {
+                resultsDiv.innerHTML += `
+                    <div>
+                        <img src="${result.image}" alt="Result Image">
+                        <p class="similarity">Similarity: ${result.similarity.toFixed(2)}</p>
+                    </div>
+                `;
+            });
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+            resultsDiv.innerHTML = `<p>Error occurred while searching.</p>`;
+        });
+}

@@ -5,3 +5,5 @@ __pycache__/
 # Ignore virtual environment folder
 venv/
 
+# Ignore Images folder
+all_images
