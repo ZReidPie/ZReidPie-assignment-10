@@ -1,81 +1,28 @@
-# Assignment 8: Logistic Regression
+# Assignment 10: Image Search
+--------------------
+TODO: For this project, please make an all_images folder and put the coco_images_resized, house.jpg, and image_embeddings.pickle 
+inside of them for paths to work correctly.
 
----
+**Goal:** Implement a simplified version of Google Image Search.
 
-**Goals**:
+This is a GUI assignment. Please set up a GitHub repo like previous assignments. There is no GUI template, but we encourage you to reuse code from earlier homeworks.
 
-In this assignment, you'll explore the effect of shifting clusters in a dataset on the parameters of a logistic regression model. You will implement parts of the code to:
-1. Generate datasets with shifted clusters.
-2. Fit a logistic regression model and extract parameters.
-3. Visualize the data, decision boundary, and logistic regression results.
-4. Analyze how these parameters change with increasing shift distances.
+**Deliverables:**
+ - A GitHub repo containing all the code necessary to reproduce your results, including a `Makefile`.
+ - A 1-2 minute video demonstrating the requirements.
 
-## Part 0: Setup Environment
+**Requirements:**
+ - The user can input a text query. After hitting the search button, the user should see the top 5 most relevant images from the database along with their similarity scores.
+ - The user can upload an image query. Again, return the top 5 relevant images along with similarity scores.
+ - The user can upload both an image and text query. In this case, the user can enter a value between 0.0 and 1.0 indicating how much to weigh the text query relative to the image query. Again, return the top 5 relevant images along with similarity scores.
+ - The user can choose to use embeddings corresponding to the first k principle components instead of CLIP embeddings for image queries. You can reuse work from this week's lab.
 
-You can use the `Makefile` to install all dependencies. In your terminal, simply run:
+[This video](https://youtu.be/U2Ga0ydCfNA) should clarify the requirements. (This video doesn't include the last requirement, but you should include it.)
 
-```bash
-make install
-```
+**Please complete the Python notebook as a first step. You don't need to hand this in, but it walks you through implementation steps.**
 
-This will automatically install the necessary packages listed in `requirements.txt`, including:
-
-- flask
-- numpy
-- scikit-learn
-- scipy
-- matplotlib
-
-## Part 1: Implementing Logistic Regression
-
-1. **Generate Clusters with a Shift**  
-- Implement the code to shift the second cluster along both the x-axis and y-axis by a specified `distance` parameter. This step will simulate different levels of separation between clusters, which you will explore later in the assignment.
-
-2. **Record Parameters for Each Shift Distance**  
-- Fit a logistic regression model to each generated dataset, and then extract and record the intercept (`beta0`) and coefficients (`beta1`, `beta2`) and any other necessary informtaion for each shift distance.
-
-3. **Plot Each Dataset and Decision Boundary**  
-- Implement code to plot the data points for each class in different colors. Include the decision boundary calculated from `beta0`, `beta1`, and `beta2` values to visually separate the classes.
-
-4. **Calculate Logistic Loss for Each Model**  
-- Implement code to compute the logistic loss for each shift distance. This loss reflects the accuracy of the logistic regression model at classifying the points in each dataset.
-
-5. **Plot Results Across Shift Distances**  
-- Implement code to create multiple plots that show how model parameters (`beta0`, `beta1`, `beta2`), slope, intercept, logistic loss, and margin width change as the shift distance increases.    
-
-## Part 2: Testing Your Code with a Static Input (Optional)
-
-1. If you prefer, you can also test the code locally by running the script directly and specifying necessary parameters. 
-
-2. Run the script in your terminal:
-   
-   python logistic_regression.py
-
-3. Check the output image in the `results` folder.
-
-## Part 3: Running the Interactive Module
-
-Once the environment is set up, you can start the Flask application by running:
-
-```bash
-make run
-```
-
-This will start the Flask server and make the interactive application available locally at `http://127.0.0.1:3000`.
-
-1. Open your browser and go to `http://127.0.0.1:3000`.
-2. Choose the range of the shift distance by specifying the lower bound (inclusive), the upper bound (inclusive), and the total step number of shifts.
-3. The resulting figure will be displayed.
-
----
-***Submission***
-
-1. Create a Short Demo Video (1-2 minutes):
-
-- Create a demo video by screen recording your output with your voice-over.
-- Explain any patterns you observe and discuss what happens when the shift increases.
-- Explain the relation between the plotted parameters.
-
-2. Submit both your completed code and the demo video link.
-You can either embed the demo video in your portfolio website or just create an unlisted YouTube video with a link to that YT video in your assignment 8 github repo's readme.
+**Please download these files:**
+- [`coco_images_resized.zip`](https://drive.google.com/file/d/1eNQIUlIKqOg-3e205YIMyUnfTTaOIspP/view?usp=sharing): The image files.
+- [`image_embeddings.pickle`](https://drive.google.com/file/d/1M0LodmtqPW-WfEUT50iAx9kAqBUo4CWm/view?usp=sharing): The image embeddings.
+- [`house.jpg`](https://drive.google.com/file/d/1uXzWnWgGIqwgEGWbWYY2xUtYXVVRvhBd/view?usp=sharing): An example image.
 
