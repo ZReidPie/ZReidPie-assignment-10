@@ -26,6 +26,12 @@
                 <option value="hybrid">Hybrid query</option>
             </select>
 
+            <label for="use-pca">Use PCA-reduced embeddings:</label>
+            <input type="checkbox" id="use-pca" name="use-pca">
+
+            <label for="pca-k">Number of Principal Components (k):</label>
+            <input type="number" id="pca-k" name="pca-k" min="1" value="10">
+
             <button type="button" onclick="performSearch()">Search</button>
         </form>
 
