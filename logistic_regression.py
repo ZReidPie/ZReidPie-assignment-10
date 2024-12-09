@@ -46,6 +46,8 @@ def get_image_embeddings(image_path):
         print(f"Error processing image {image_path}: {e}")
         return np.random.rand(1, 512)  # Fallback for testing
 
+import shutil  # Add this import
+
 def search_images(text_query, image_path, query_type, weight):
     """
     Search the database for relevant images based on a text or image query.
@@ -60,6 +62,7 @@ def search_images(text_query, image_path, query_type, weight):
         List[dict]: Top 5 results with similarity scores.
     """
     results = []
+    uploads_folder = "uploads"
 
     # Generate a random embedding for the text query (placeholder)
     text_embedding = np.random.rand(1, 512) if text_query else None
@@ -85,8 +88,19 @@ def search_images(text_query, image_path, query_type, weight):
     # Extract the top 5 results based on similarity scores
     top_indices = np.argsort(similarities[0])[::-1][:5]
     for idx in top_indices:
+        src_image_path = f"all_images/coco_images_resized/coco_images_resized/{image_names[idx]}"
+        dest_image_path = os.path.join(uploads_folder, image_names[idx])
+
+        # Copy the image to the uploads folder
+        try:
+            shutil.copy(src_image_path, dest_image_path)
+        except Exception as e:
+            print(f"Error copying image {src_image_path} to {dest_image_path}: {e}")
+            continue
+
+        # Append the result
         results.append({
-            "image": f"all_images/coco_images_resized/coco_images_resized/{image_names[idx]}",  # Adjust path as needed
+            "image": f"uploads/{image_names[idx]}",  # Path in the uploads folder
             "similarity": float(similarities[0][idx])  # Convert to Python float for JSON compatibility
         })
 

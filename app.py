@@ -33,5 +33,13 @@ def search():
     # Return JSON response
     return jsonify(results)
 
+
+from flask import send_from_directory
+
+@app.route('/uploads/<path:filename>')
+def serve_uploaded_image(filename):
+    return send_from_directory('uploads', filename)
+
+
 if __name__ == "__main__":
     app.run(debug=True)
