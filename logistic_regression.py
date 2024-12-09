@@ -5,6 +5,8 @@ from PIL import Image
 from open_clip import create_model_and_transforms
 import torch
 import os
+import shutil  
+import open_clip
 
 # Load the embeddings file as a pandas DataFrame
 EMBEDDINGS_FILE = "all_images/image_embeddings.pickle"
@@ -46,7 +48,25 @@ def get_image_embeddings(image_path):
         print(f"Error processing image {image_path}: {e}")
         return np.random.rand(1, 512)  # Fallback for testing
 
-import shutil  # Add this import
+def get_text_embeddings(text_query):
+    """
+    Generate embeddings for a text query using the CLIP model.
+
+    Args:
+        text_query (str): The input text query.
+
+    Returns:
+        np.ndarray: The embedding vector of the text.
+    """
+    try:
+        # Tokenize and encode the text
+        text_tokens = open_clip.tokenize([text_query]).to(DEVICE)
+        with torch.no_grad():
+            text_embedding = model.encode_text(text_tokens).cpu().numpy()
+        return text_embedding
+    except Exception as e:
+        print(f"Error processing text query '{text_query}': {e}")
+        return np.random.rand(1, 512)  # Fallback for testing
 
 def search_images(text_query, image_path, query_type, weight):
     """
@@ -65,7 +85,7 @@ def search_images(text_query, image_path, query_type, weight):
     uploads_folder = "uploads"
 
     # Generate a random embedding for the text query (placeholder)
-    text_embedding = np.random.rand(1, 512) if text_query else None
+    text_embedding = get_text_embeddings(text_query) if text_query else None
 
     # Generate an embedding for the image query
     image_embedding = get_image_embeddings(image_path) if image_path else None
